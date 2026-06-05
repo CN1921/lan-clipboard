@@ -1,0 +1,33 @@
+name: CI - 择期删除
+
+on:
+  push:
+    branches: [ feature/rust-init ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
+      - name: Check formatting
+        run: |
+          cargo fmt -- --check
+
+      - name: Run clippy
+        run: |
+          cargo clippy --all-targets --all-features -- -D warnings
+
+      - name: Run tests
+        run: |
+          cargo test --all
