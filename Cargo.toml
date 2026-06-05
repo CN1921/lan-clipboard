@@ -19,6 +19,7 @@ rand = "0.8"
 sha2 = "0.10"
 log = "0.4"
 thiserror = "1.0"
+zeroize = "1.5"
 
 # Optional / platform-specific
 tokio = { version = "1", features = ["full"], optional = true }
