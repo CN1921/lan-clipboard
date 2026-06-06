@@ -12,13 +12,27 @@ pub enum CryptoError {
     Base64(#[from] base64::DecodeError),
     
     #[error("argon2 password hash error: {0}")]
-    Argon2Password(#[from] argon2::password_hash::Error),
+    Argon2Password(String),
     
     #[error("argon2 error: {0}")]
-    Argon2(#[from] argon2::Error),
+    Argon2(String),
     
     #[error("crypto error: {0}")]
     Other(String),
+}
+
+/// Implement From for argon2::password_hash::Error
+impl From<argon2::password_hash::Error> for CryptoError {
+    fn from(err: argon2::password_hash::Error) -> Self {
+        CryptoError::Argon2Password(err.to_string())
+    }
+}
+
+/// Implement From for argon2::Error
+impl From<argon2::Error> for CryptoError {
+    fn from(err: argon2::Error) -> Self {
+        CryptoError::Argon2(err.to_string())
+    }
 }
 
 /// Derive a cryptographic key from a passphrase using Argon2
@@ -50,7 +64,7 @@ pub fn verify_password(password: &str, hash: &str) -> Result<bool, CryptoError> 
     match argon2.verify_password(password.as_bytes(), &parsed_hash) {
         Ok(_) => Ok(true),
         Err(argon2::password_hash::Error::Password) => Ok(false),
-        Err(e) => Err(CryptoError::Argon2Password(e)),
+        Err(e) => Err(CryptoError::Argon2Password(e.to_string())),
     }
 }
 
