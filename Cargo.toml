@@ -6,9 +6,9 @@ edition = "2021"
 [features]
 # No default features to keep CI simple. Enable tray/clipboard/net explicitly when building for Windows GUI.
 default = []
-tray = ["tray-item"]
-clipboard = ["clipboard"]
-net = ["tokio"]
+tray = ["dep:tray-item"]
+clipboard = ["dep:clipboard"]
+net = ["dep:tokio"]
 
 [dependencies]
 serde = { version = "1.0", features = ["derive"] }
